@@ -33,24 +33,21 @@ DEQUE_CATACLYSM_RELEASE = deque()
 LEVEL_CATACLYSM_RELEASE = {}
 CATACLYSM_BEEN_RELEASE = set()
 CATACLYSM_PREV_LEVEL_RELEASE = 0
+CATACLYSM_COUNTER = 0
 
 PREDATOR = []
 PREDATOR_NUMBER = 4
 PREDATOR_ENERGY = 50
-PREDATOR_COUNTER = 1
 
 EVOLVED_PREDATOR = []
 EVOLVED_PREDATOR_ENERGY = 70
-EVOLVED_PREDATOR_COUNTER = 1
 
 EVOLVED_PREY = []
-EVOLVED_PREY_COUNTER = 1
 
 PLANT = []
 PREY = []
 PREY_ENERGY = 30
 PREY_NUMBER = 10
-PREY_COUNTER = 1
 
 """
 predator = RED
@@ -655,7 +652,7 @@ def cataclysm(grid):  # the cataclysm propagation
 
 
 def run_simulation():
-    global CATACLYSM_PRODUCED
+    global CATACLYSM_PRODUCED, CATACLYSM_COUNTER
 
     WIN = pygame.display.set_mode((WIDTH, WIDTH))
     pygame.display.set_caption("Evolution")
@@ -676,11 +673,13 @@ def run_simulation():
     prev_timeCataclysm = time.time()
 
 
-    # this will actually be a frame, 1 time_step == 1 frame per second
-    time_step = 0
+    # this will actually be a frame, 1 timestamp == 1 frame per second
+    timestamp = 0
+
+    information_over_time = [] # an element of this list is equal with [len(PLANT), len(PREY), len(PREDATOR), len(EVOLVED_PREY), len(EVOLVED_PREDATOR), cataclysm_counter, timestamp]
 
     while run:
-        print(f"Prey: {PREY}, Predator: {PREDATOR}")
+        print(f"Plants: {len(PLANT)}, Prey: {len(PREY)}, Predator: {len(PREDATOR)}, Evolved Prey: {len(EVOLVED_PREY)}, Evolved Predator {len(EVOLVED_PREDATOR)}, Timestamp: {timestamp}, Cataclysm: {CATACLYSM_COUNTER}")
         new_timePlants = time.time()
         new_timePrey = time.time()
         new_timeEvPrey = time.time()
@@ -691,6 +690,7 @@ def run_simulation():
 
         if 0.700000 < cataclysm_p - int(cataclysm_p) < 0.70200 and not CATACLYSM_PRODUCED:
             CATACLYSM_PRODUCED = True
+            CATACLYSM_COUNTER += 1
             cataclysm_spawn()
 
         if new_timePlants >= prev_timePlants + 0.7:  # + 1
@@ -723,7 +723,7 @@ def run_simulation():
             if event.type == pygame.QUIT:
                 run = False
 
-        time_step += 1
+        timestamp += 1
 
         pygame.display.update()
 
