@@ -236,7 +236,7 @@ def prey_move(win, grid):  # the move made by the prey
         queue.put(prey)
         level = {prey: 0}
         if not chance_evolve:
-            if grid[start1][start2].energy >= 50:  # here the species reproduces itself
+            if grid[start1][start2].energy >= 45:  # here the species reproduces itself
                 for d in dir:
                     if 0 <= start1 + d[0] < ROWS and 0 <= start2 + d[1] < ROWS and grid[start1 + d[0]][
                         start2 + d[1]].is_ground():
@@ -418,7 +418,7 @@ def predator_move(win, grid):  # the move made by the predator
             grid[start1][start2].energy += 0.5
             continue
 
-        if grid[start1][start2].energy >= 170 and not chance_of_ev:  # here the species reproduces itself
+        if grid[start1][start2].energy >= 120 and not chance_of_ev:  # here the species reproduces itself
             for d in dir:
                 if 0 <= start1 + d[0] < ROWS and 0 <= start2 + d[1] < ROWS and grid[start1 + d[0]][
                     start2 + d[1]].is_ground():
@@ -429,7 +429,7 @@ def predator_move(win, grid):  # the move made by the predator
                     break
 
         elif grid[start1][
-            start2].energy >= 170 and chance_of_ev:  # here the predator has a chance to evolve in a superior species
+            start2].energy >= 150 and chance_of_ev:  # here the predator has a chance to evolve in a superior species
             evolved = True
             grid[start1][start2].make_ev_predator()
             to_remove.append((start1, start2))
@@ -659,92 +659,6 @@ def cataclysm(grid):  # the cataclysm propagation
         CATACLYSM_PRODUCED = False
 
 
-def run_simulation():
-    global CATACLYSM_PRODUCED, CATACLYSM_COUNTER
-
-    WIN = pygame.display.set_mode((WIDTH, WIDTH))
-    pygame.display.set_caption("Evolution")
-
-    grid = make_grid(ROWS, WIDTH)
-    run = True
-
-    hard_terrain(WIN, grid)  # obstacles???
-    prey_spawn(WIN, grid)
-    predator_spawn(WIN, grid)
-    plant_spawn(WIN, grid)
-
-    prev_timePlants = time.time()
-    prev_timePrey = time.time()
-    prev_timeEvPrey = time.time()
-    prev_timePredator = time.time()
-    prev_timeEvPredator = time.time()
-    prev_timeCataclysm = time.time()
-
-
-    # this will actually be a frame, 1 timestamp == 1 frame per second
-    timestamp = 0
-
-    information_over_time = [] # an element of this list is equal with [len(PLANT), len(PREY), len(PREDATOR), len(EVOLVED_PREY), len(EVOLVED_PREDATOR), cataclysm_counter, timestamp]
-
-    while run:
-        #print(f"Preys: {PREY}, Timestamp: {timestamp}")
-        #print(f"Plants: {len(PLANT)}, Prey: {len(PREY)}, Predator: {len(PREDATOR)}, Evolved Prey: {len(EVOLVED_PREY)}, Evolved Predator {len(EVOLVED_PREDATOR)}, Timestamp: {timestamp}, Cataclysm: {CATACLYSM_COUNTER}")
-        information_over_time.append((len(PLANT), len(PREY), len(PREDATOR), len(EVOLVED_PREY), len(EVOLVED_PREDATOR), timestamp, CATACLYSM_COUNTER))
-        new_timePlants = time.time()
-        new_timePrey = time.time()
-        new_timeEvPrey = time.time()
-        new_timePredator = time.time()
-        new_timeEvPredator = time.time()
-        new_timeCataclysm = time.time()
-        #cataclysm_p = time.time()
-
-        #if 0.700000 < cataclysm_p - int(cataclysm_p) < 0.70200 and not CATACLYSM_PRODUCED:  # hardcoded path since is best for this one
-        #    CATACLYSM_PRODUCED = True
-        #    CATACLYSM_COUNTER += 1
-        #    cataclysm_spawn()
-
-        if random.random() < CATACLYSM_CHANCE:
-            CATACLYSM_PRODUCED = True
-            CATACLYSM_COUNTER += 1
-            cataclysm_spawn()
-
-        if new_timePlants >= prev_timePlants + 0.7:  # + 1
-            prev_timePlants = new_timePlants
-            plant_spawn(WIN, grid)
-
-        if CATACLYSM_PRODUCED and new_timeCataclysm >= prev_timeCataclysm + 0.05:  # 0.05 the speed of producing the crater | animation for every frame
-            prev_timeCataclysm = new_timeCataclysm
-            cataclysm(grid)
-
-        if new_timeEvPredator >= prev_timeEvPredator + 0.12:  # + 0.2
-            prev_timeEvPredator = new_timeEvPredator
-            ev_predator_move(WIN, grid)
-
-        if new_timePredator >= prev_timePredator + 0.2:  # + 0.3
-            prev_timePredator = new_timePredator
-            predator_move(WIN, grid)
-
-        if new_timePrey >= prev_timePrey + 0.25:  # + 0.35
-            prev_timePrey = new_timePrey
-            prey_move(WIN, grid)
-            # print("BLUE:", len(PREY))
-
-        if new_timeEvPrey >= prev_timeEvPrey + 0.65:
-            prev_timeEvPrey = new_timeEvPrey
-            evolved_prey_move(grid)
-
-        draw(WIN, grid, ROWS, WIDTH)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-
-        timestamp += 1
-
-        pygame.display.update()
-
-    pygame.quit()
-    reset_global_variables()
-
 def reset_global_variables():
     global ROWS, WIDTH, RED, GREEN, BLUE, YELLOW, WHITE, BLACK, PURPLE, ORANGE, GREY, TURQUOISE
     global dir, dirAll, CATACLYSM_PRODUCED, CATACLYSM, DEQUE_CATACLYSM, LEVEL_CATACLYSM, CATACLYSM_BEEN, CATACLYSM_CHANCE
@@ -798,4 +712,99 @@ def reset_global_variables():
     PREY_ENERGY = 30
     PREY_NUMBER = 10
     PREY_CHANCE_EVOLVE = 0.1
+
+
+def run_simulation():
+    from plotter import Plotter
+    global CATACLYSM_PRODUCED, CATACLYSM_COUNTER
+
+    WIN = pygame.display.set_mode((WIDTH, WIDTH))
+    pygame.display.set_caption("Evolution")
+
+    grid = make_grid(ROWS, WIDTH)
+    run = True
+
+    hard_terrain(WIN, grid)  # obstacles???
+    prey_spawn(WIN, grid)
+    predator_spawn(WIN, grid)
+    plant_spawn(WIN, grid)
+
+    prev_timePlants = time.time()
+    prev_timePrey = time.time()
+    prev_timeEvPrey = time.time()
+    prev_timePredator = time.time()
+    prev_timeEvPredator = time.time()
+    prev_timeCataclysm = time.time()
+
+
+    # this will actually be a frame, 1 timestamp == 1 frame per second
+    timestamp = 0
+
+    information_over_time = [] # an element of this list is equal with [len(PLANT), len(PREY), len(PREDATOR), len(EVOLVED_PREY), len(EVOLVED_PREDATOR), cataclysm_counter, timestamp]
+
+    while run:
+        #print(f"Preys: {PREY}, Timestamp: {timestamp}")
+        #print(f"Plants: {len(PLANT)}, Prey: {len(PREY)}, Predator: {len(PREDATOR)}, Evolved Prey: {len(EVOLVED_PREY)}, Evolved Predator {len(EVOLVED_PREDATOR)}, Timestamp: {timestamp}, Cataclysm: {CATACLYSM_COUNTER}")
+        #print(len(PLANT), len(PREY), len(PREDATOR), len(EVOLVED_PREY), len(EVOLVED_PREDATOR), CATACLYSM_COUNTER, timestamp)
+        information_over_time.append((len(PLANT), len(PREY), len(PREDATOR), len(EVOLVED_PREY), len(EVOLVED_PREDATOR), CATACLYSM_COUNTER, timestamp))
+        new_timePlants = time.time()
+        new_timePrey = time.time()
+        new_timeEvPrey = time.time()
+        new_timePredator = time.time()
+        new_timeEvPredator = time.time()
+        new_timeCataclysm = time.time()
+        #cataclysm_p = time.time()
+
+        #if 0.700000 < cataclysm_p - int(cataclysm_p) < 0.70200 and not CATACLYSM_PRODUCED:  # hardcoded path since is best for this one
+        #    CATACLYSM_PRODUCED = True
+        #    CATACLYSM_COUNTER += 1
+        #    cataclysm_spawn()
+
+        if random.random() < CATACLYSM_CHANCE and not CATACLYSM_PRODUCED:
+            CATACLYSM_PRODUCED = True
+            CATACLYSM_COUNTER += 1
+            cataclysm_spawn()
+
+        if new_timePlants >= prev_timePlants + 0.7:  # + 1
+            prev_timePlants = new_timePlants
+            plant_spawn(WIN, grid)
+
+        if CATACLYSM_PRODUCED and new_timeCataclysm >= prev_timeCataclysm + 0.05:  # 0.05 the speed of producing the crater | animation for every frame
+            prev_timeCataclysm = new_timeCataclysm
+            cataclysm(grid)
+
+        if new_timeEvPredator >= prev_timeEvPredator + 0.12:  # + 0.2
+            prev_timeEvPredator = new_timeEvPredator
+            ev_predator_move(WIN, grid)
+
+        if new_timePredator >= prev_timePredator + 0.2:  # + 0.3
+            prev_timePredator = new_timePredator
+            predator_move(WIN, grid)
+
+        if new_timePrey >= prev_timePrey + 0.25:  # + 0.35
+            prev_timePrey = new_timePrey
+            prey_move(WIN, grid)
+            # print("BLUE:", len(PREY))
+
+        if new_timeEvPrey >= prev_timeEvPrey + 0.65:
+            prev_timeEvPrey = new_timeEvPrey
+            evolved_prey_move(grid)
+
+        draw(WIN, grid, ROWS, WIDTH)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+        timestamp += 1
+
+        pygame.display.update()
+
+    pygame.quit()
+    reset_global_variables()
+
+    # plot the result data
+    plotter_obj = Plotter(information_over_time)
+    plotter_obj.plot_graph()
+
+
 

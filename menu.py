@@ -193,11 +193,11 @@ class Menu:
 
         try:
             formatted_value = float(raw_value)  # to use it later in the simulation
-            assert formatted_value <= 0.001
+            assert formatted_value <= 0.01
             return formatted_value
         except Exception as e:
             logging.warning(f"The input value as chance for a cataclysm to happen is not correct!{e}")
             # run the default one
             messagebox.showinfo("Warning",
-                                "The value for the cataclysm's chance to happen should be a float <= 0.001! The default value will be used.")
+                                "The value for the cataclysm's chance to happen should be a float <= 0.01! The default value will be used.")
             return simulation.CATACLYSM_CHANCE

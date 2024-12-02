@@ -1,9 +1,9 @@
 GRASS
-	grass energy is 15 points
+	The grass energy is 15 points
 
 PREY
 	borned prey has 30 energy points (the mother loses 30 points at birth)
-	prey can reproduce itself at energy >= 50
+	prey can reproduce itself at energy >= 40
 	prey can evolve at energy >= 80 (evolves in a evolved prey but loses 40 points)
 	range view for searching food is 15 squares
 	
@@ -15,8 +15,8 @@ EVOLVED_PREY
 PREDATOR
 	borned predator has 50 energy points
 	if its energy is <= 10 (tired) it gains 0.5 every time iteration otherwise it starts searching for food
-	if its energy is >= 170 it can reproduce itself 
-	if its energy is >= 170 it can evolve into a evolved predator
+	if its energy is >= 120 it can reproduce itself
+	if its energy is >= 150 it can evolve into an evolved predator
 	it eats the prey without 30 points (standard PREY ENERGY)
 	view range for searching food is 20 squares
 
@@ -25,6 +25,8 @@ EVOLVED PREDATOR
 	if energy level >= 200 it reproduces to an evolved predator and loses 3 * 30 energy
 	it eats normal prey or normal predator and receive its energy - 15
 	range view for searching is huge == 50 squares
+
+The chances | the parameters do no reflect entirely the whole mechanism since there are laws that encapsulate these chances.
 
 Parameters to try:
     preys: 6
