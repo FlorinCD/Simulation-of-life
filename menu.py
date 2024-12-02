@@ -19,18 +19,21 @@ class Menu:
         self.prey_chance_evolve_label = None
         self.predator_chance_evolve_label = None
         self.evolved_predator_regression_label = None
+        self.cataclysm_chance_label = None
 
         self.prey_number_text = None
         self.predator_number_text = None
         self.prey_chance_evolve_text = None
         self.predator_chance_evolve_text = None
         self.evolved_predator_regression_text = None
+        self.cataclysm_chance_text = None
 
         self.prey_number_value = None
         self.predator_number_value = None
         self.prey_chance_evolve_value = None
         self.predator_chance_evolve_value = None
         self.evolved_predator_regression_value = None
+        self.cataclysm_chance_value = None
 
         self.decorate_menu()
 
@@ -87,6 +90,16 @@ class Menu:
         self.evolved_predator_regression_text = Text(self.frame, height=1, width=10)
         self.evolved_predator_regression_text.place(x=340, y=250)
 
+        self.cataclysm_chance_label = tk.Label(self.frame,
+                                                          text="The chance of a cataclysm to happen:",
+                                                          anchor="w",
+                                                          bg='#3b3642', fg='#ffffff',
+                                                          font=("Arial", 11))
+        self.cataclysm_chance_label.place(x=20, y=300)
+
+        self.cataclysm_chance_text = Text(self.frame, height=1, width=10)
+        self.cataclysm_chance_text.place(x=340, y=300)
+
         self.run_button = tk.Button(self.frame, text="Run Simulation", command=self.run_simulation_button, font=("Arial", 11), bg='green', fg='#ffffff')
         self.run_button.place(x=230, y=500)
 
@@ -97,11 +110,14 @@ class Menu:
         self.prey_number_value = self.get_prey_value()
         self.predator_number_value = self.get_predator_value()
 
+        # set the parameters for the simulation
         simulation.PREY_NUMBER = self.prey_number_value
         simulation.PREDATOR_NUMBER = self.predator_number_value
         simulation.PREY_CHANCE_EVOLVE = self.get_prey_chance_evolve()
         simulation.PREDATOR_CHANCE_EVOLVE = self.get_predator_chance_evolve()
         simulation.EVOLVED_PREDATOR_CHANCE_REGRESSION = self.get_evolved_predator_chance_regression()
+        simulation.CATACLYSM_CHANCE = self.get_cataclysm_chance()
+
         simulation.run_simulation()
 
 
@@ -135,42 +151,53 @@ class Menu:
         raw_value = self.prey_chance_evolve_text.get("1.0", "end-1c")
 
         try:
-            formatted_value = float(raw_value) * 100 # to use it later in the simulation
-            print(formatted_value)
-            assert formatted_value <= 100
+            formatted_value = float(raw_value)  # to use it later in the simulation
+            assert formatted_value <= 1
             return formatted_value
         except Exception as e:
             logging.warning(f"The input value as chance for prey to evolve is not correct!{e}")
             # run the default one
-            messagebox.showinfo("Warning", "The value for the prey's chance to evolve should be a float <= 1 where 1 == 100% and 0.1 == 10%! The default value will be used.")
+            messagebox.showinfo("Warning", "The value for the prey's chance to evolve should be a float <= 1! The default value will be used.")
             return simulation.PREY_CHANCE_EVOLVE
 
     def get_predator_chance_evolve(self) -> float:
         raw_value = self.predator_chance_evolve_text.get("1.0", "end-1c")
 
         try:
-            formatted_value = float(raw_value) * 100  # to use it later in the simulation
-            print(formatted_value)
-            assert formatted_value <= 100
+            formatted_value = float(raw_value)  # to use it later in the simulation
+            assert formatted_value <= 1
             return formatted_value
         except Exception as e:
             logging.warning(f"The input value as chance for predator to evolve is not correct!{e}")
             # run the default one
             messagebox.showinfo("Warning",
-                                "The value for the predator's chance to evolve should be a float <= 1 where 1 == 100% and 0.1 == 10%! The default value will be used.")
+                                "The value for the predator's chance to evolve should be a float <= 1! The default value will be used.")
             return simulation.PREDATOR_CHANCE_EVOLVE
 
     def get_evolved_predator_chance_regression(self) -> float:
         raw_value = self.evolved_predator_regression_text.get("1.0", "end-1c")
 
         try:
-            formatted_value = float(raw_value) * 100  # to use it later in the simulation
-            print(formatted_value)
-            assert formatted_value <= 100
+            formatted_value = float(raw_value)  # to use it later in the simulation
+            assert formatted_value <= 1
             return formatted_value
         except Exception as e:
             logging.warning(f"The input value as chance for predator to regress is not correct!{e}")
             # run the default one
             messagebox.showinfo("Warning",
-                                "The value for the predator's chance to regress should be a float <= 1 where 1 == 100% and 0.1 == 10%! The default value will be used.")
+                                "The value for the predator's chance to regress should be a float <= 1! The default value will be used.")
             return simulation.EVOLVED_PREDATOR_CHANCE_REGRESSION
+
+    def get_cataclysm_chance(self) -> float:
+        raw_value = self.cataclysm_chance_text.get("1.0", "end-1c")
+
+        try:
+            formatted_value = float(raw_value)  # to use it later in the simulation
+            assert formatted_value <= 0.001
+            return formatted_value
+        except Exception as e:
+            logging.warning(f"The input value as chance for a cataclysm to happen is not correct!{e}")
+            # run the default one
+            messagebox.showinfo("Warning",
+                                "The value for the cataclysm's chance to happen should be a float <= 0.001! The default value will be used.")
+            return simulation.CATACLYSM_CHANCE

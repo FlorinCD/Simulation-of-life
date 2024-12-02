@@ -34,11 +34,12 @@ LEVEL_CATACLYSM_RELEASE = {}
 CATACLYSM_BEEN_RELEASE = set()
 CATACLYSM_PREV_LEVEL_RELEASE = 0
 CATACLYSM_COUNTER = 0
+CATACLYSM_CHANCE = 0.001
 
 PREDATOR = []
 PREDATOR_NUMBER = 4
 PREDATOR_ENERGY = 50
-PREDATOR_CHANCE_EVOLVE = 30
+PREDATOR_CHANCE_EVOLVE = 0.3
 
 EVOLVED_PREDATOR = []
 EVOLVED_PREDATOR_ENERGY = 70
@@ -50,7 +51,7 @@ PLANT = []
 PREY = []
 PREY_ENERGY = 30
 PREY_NUMBER = 10
-PREY_CHANCE_EVOLVE = 30
+PREY_CHANCE_EVOLVE = 0.1
 
 """
 predator = RED
@@ -221,8 +222,9 @@ def prey_move(win, grid):  # the move made by the prey
 
     for i, prey in enumerate(PREY):
         chance_evolve = False
-        number = random.randrange(0, 200)
-        if number % 169 == 0:
+
+        # chance for the prey to evolve in a better species
+        if random.random() <= PREY_CHANCE_EVOLVE:
             chance_evolve = True
 
         parent = {}
@@ -243,7 +245,7 @@ def prey_move(win, grid):  # the move made by the prey
                         PREY.append((start1 + d[0], start2 + d[1]))
                         grid[start1][start2].energy -= PREY_ENERGY
                         break
-        elif chance_evolve and grid[start1][start2].energy >= 50:
+        elif chance_evolve and grid[start1][start2].energy >= 80:
 
             PREY.remove((start1, start2))
             EVOLVED_PREY.append((start1, start2))
@@ -388,9 +390,10 @@ def predator_spawn(win, grid):  # predator spawn
 
 def predator_move(win, grid):  # the move made by the predator
     global PREY, PREY_ENERGY, GREEN, BLACK, PURPLE, ROWS, RED, ORANGE, TURQUOISE, PREDATOR, PREDATOR_ENERGY, EVOLVED_PREDATOR
-    number = random.randrange(0, ROWS)
     to_remove = []
-    if number % 8 == 0:  # chance of evolving
+
+    # chance for predator to evolve in a better species
+    if random.random() <= PREDATOR_CHANCE_EVOLVE:
         chance_of_ev = True
     else:
         chance_of_ev = False
@@ -426,7 +429,7 @@ def predator_move(win, grid):  # the move made by the predator
                     break
 
         elif grid[start1][
-            start2].energy >= 180 and chance_of_ev:  # here the predator has a chance to evolve in a superior species
+            start2].energy >= 170 and chance_of_ev:  # here the predator has a chance to evolve in a superior species
             evolved = True
             grid[start1][start2].make_ev_predator()
             to_remove.append((start1, start2))
@@ -493,12 +496,14 @@ def ev_predator_move(win, grid):  # evolved predator
 
     for i, predator in enumerate(EVOLVED_PREDATOR):
         start1, start2 = predator
-        number = random.randrange(0, 1000)
-        if number % 696 == 0:  # chance of regression
+
+        # the chance of the evolved predator to regress to normal predator
+        if random.random() <= EVOLVED_PREDATOR_CHANCE_REGRESSION / 2:
             grid[start1][start2].make_predator()
             EVOLVED_PREDATOR.remove((start1, start2))
             PREDATOR.append((start1, start2))
             continue
+
         parent = {}
         queue = Queue()
         been = set()
@@ -682,6 +687,7 @@ def run_simulation():
     information_over_time = [] # an element of this list is equal with [len(PLANT), len(PREY), len(PREDATOR), len(EVOLVED_PREY), len(EVOLVED_PREDATOR), cataclysm_counter, timestamp]
 
     while run:
+        #print(f"Preys: {PREY}, Timestamp: {timestamp}")
         #print(f"Plants: {len(PLANT)}, Prey: {len(PREY)}, Predator: {len(PREDATOR)}, Evolved Prey: {len(EVOLVED_PREY)}, Evolved Predator {len(EVOLVED_PREDATOR)}, Timestamp: {timestamp}, Cataclysm: {CATACLYSM_COUNTER}")
         information_over_time.append((len(PLANT), len(PREY), len(PREDATOR), len(EVOLVED_PREY), len(EVOLVED_PREDATOR), timestamp, CATACLYSM_COUNTER))
         new_timePlants = time.time()
@@ -690,9 +696,14 @@ def run_simulation():
         new_timePredator = time.time()
         new_timeEvPredator = time.time()
         new_timeCataclysm = time.time()
-        cataclysm_p = time.time()
+        #cataclysm_p = time.time()
 
-        if 0.700000 < cataclysm_p - int(cataclysm_p) < 0.70200 and not CATACLYSM_PRODUCED:
+        #if 0.700000 < cataclysm_p - int(cataclysm_p) < 0.70200 and not CATACLYSM_PRODUCED:  # hardcoded path since is best for this one
+        #    CATACLYSM_PRODUCED = True
+        #    CATACLYSM_COUNTER += 1
+        #    cataclysm_spawn()
+
+        if random.random() < CATACLYSM_CHANCE:
             CATACLYSM_PRODUCED = True
             CATACLYSM_COUNTER += 1
             cataclysm_spawn()
@@ -701,7 +712,7 @@ def run_simulation():
             prev_timePlants = new_timePlants
             plant_spawn(WIN, grid)
 
-        if CATACLYSM_PRODUCED and new_timeCataclysm >= prev_timeCataclysm + 0.05:
+        if CATACLYSM_PRODUCED and new_timeCataclysm >= prev_timeCataclysm + 0.05:  # 0.05 the speed of producing the crater | animation for every frame
             prev_timeCataclysm = new_timeCataclysm
             cataclysm(grid)
 
@@ -732,4 +743,59 @@ def run_simulation():
         pygame.display.update()
 
     pygame.quit()
+    reset_global_variables()
+
+def reset_global_variables():
+    global ROWS, WIDTH, RED, GREEN, BLUE, YELLOW, WHITE, BLACK, PURPLE, ORANGE, GREY, TURQUOISE
+    global dir, dirAll, CATACLYSM_PRODUCED, CATACLYSM, DEQUE_CATACLYSM, LEVEL_CATACLYSM, CATACLYSM_BEEN, CATACLYSM_CHANCE
+    global CATACLYSM_PREV_LEVEL, DEQUE_CATACLYSM_RELEASE, LEVEL_CATACLYSM_RELEASE, CATACLYSM_BEEN_RELEASE, CATACLYSM_PREV_LEVEL_RELEASE
+    global CATACLYSM_COUNTER, PREDATOR, PREDATOR_NUMBER, PREDATOR_ENERGY, PREDATOR_CHANCE_EVOLVE, EVOLVED_PREDATOR, EVOLVED_PREDATOR_ENERGY
+    global EVOLVED_PREDATOR_CHANCE_REGRESSION, EVOLVED_PREY, PLANT, PREY, PREY_ENERGY, PREY_NUMBER, PREY_CHANCE_EVOLVE
+
+    ROWS = 70
+    WIDTH = 770
+
+    RED = (255, 0, 0)
+    GREEN = (0, 255, 0)
+    BLUE = (0, 0, 255)
+    YELLOW = (255, 255, 0)
+    WHITE = (255, 255, 255)
+    BLACK = (0, 0, 0)
+    PURPLE = (128, 0, 128)
+    ORANGE = (255, 165, 0)
+    GREY = (128, 128, 128)
+    TURQUOISE = (64, 224, 208)
+
+    dir = ((-1, 0), (0, 1), (1, 0), (0, -1))
+    dirAll = ((-1, 0), (0, 1), (1, 0), (0, -1), (-1, -1), (-1, 1), (1, -1), (1, 1))
+
+    CATACLYSM_PRODUCED = False
+    CATACLYSM = []
+    DEQUE_CATACLYSM = deque()
+    LEVEL_CATACLYSM = {}
+    CATACLYSM_BEEN = set()
+    CATACLYSM_PREV_LEVEL = 0
+    DEQUE_CATACLYSM_RELEASE = deque()
+    LEVEL_CATACLYSM_RELEASE = {}
+    CATACLYSM_BEEN_RELEASE = set()
+    CATACLYSM_PREV_LEVEL_RELEASE = 0
+    CATACLYSM_COUNTER = 0
+    CATACLYSM_CHANCE = 0.001
+
+    PREDATOR = []
+    PREDATOR_NUMBER = 4
+    PREDATOR_ENERGY = 50
+    PREDATOR_CHANCE_EVOLVE = 0.3
+
+    EVOLVED_PREDATOR = []
+    EVOLVED_PREDATOR_ENERGY = 70
+    EVOLVED_PREDATOR_CHANCE_REGRESSION = 30
+
+    EVOLVED_PREY = []
+
+    PLANT = []
+    PREY = []
+    PREY_ENERGY = 30
+    PREY_NUMBER = 10
+    PREY_CHANCE_EVOLVE = 0.1
 
