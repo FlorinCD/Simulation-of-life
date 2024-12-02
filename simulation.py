@@ -38,9 +38,11 @@ CATACLYSM_COUNTER = 0
 PREDATOR = []
 PREDATOR_NUMBER = 4
 PREDATOR_ENERGY = 50
+PREDATOR_CHANCE_EVOLVE = 30
 
 EVOLVED_PREDATOR = []
 EVOLVED_PREDATOR_ENERGY = 70
+EVOLVED_PREDATOR_CHANCE_REGRESSION = 30
 
 EVOLVED_PREY = []
 
@@ -48,6 +50,7 @@ PLANT = []
 PREY = []
 PREY_ENERGY = 30
 PREY_NUMBER = 10
+PREY_CHANCE_EVOLVE = 30
 
 """
 predator = RED
@@ -679,7 +682,8 @@ def run_simulation():
     information_over_time = [] # an element of this list is equal with [len(PLANT), len(PREY), len(PREDATOR), len(EVOLVED_PREY), len(EVOLVED_PREDATOR), cataclysm_counter, timestamp]
 
     while run:
-        print(f"Plants: {len(PLANT)}, Prey: {len(PREY)}, Predator: {len(PREDATOR)}, Evolved Prey: {len(EVOLVED_PREY)}, Evolved Predator {len(EVOLVED_PREDATOR)}, Timestamp: {timestamp}, Cataclysm: {CATACLYSM_COUNTER}")
+        #print(f"Plants: {len(PLANT)}, Prey: {len(PREY)}, Predator: {len(PREDATOR)}, Evolved Prey: {len(EVOLVED_PREY)}, Evolved Predator {len(EVOLVED_PREDATOR)}, Timestamp: {timestamp}, Cataclysm: {CATACLYSM_COUNTER}")
+        information_over_time.append((len(PLANT), len(PREY), len(PREDATOR), len(EVOLVED_PREY), len(EVOLVED_PREDATOR), timestamp, CATACLYSM_COUNTER))
         new_timePlants = time.time()
         new_timePrey = time.time()
         new_timeEvPrey = time.time()
