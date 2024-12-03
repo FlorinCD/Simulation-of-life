@@ -37,10 +37,10 @@ class Plotter:
         plt.xlabel('Time', fontsize=12)
         plt.ylabel('Number', fontsize=12)
         plt.title('Graphic for Simulation of life', fontsize=16, fontweight='bold')
-        plt.legend()
+        plt.legend(loc='best')
         plt.grid(color='gray', linestyle='--', linewidth=0.5, alpha=0.7)
 
-        plt.savefig("full_correlation_graph.png", dpi=300, bbox_inches='tight')
+        plt.savefig("./graphs/full_correlation_graph.png", dpi=300, bbox_inches='tight')
         # Display the plot
         plt.show()
 
@@ -57,10 +57,10 @@ class Plotter:
         plt.xlabel('Time', fontsize=12)
         plt.ylabel('Number', fontsize=12)
         plt.title('Plant vs Prey', fontsize=16, fontweight='bold')
-        plt.legend()
+        plt.legend(loc='best')
         plt.grid(color='gray', linestyle='--', linewidth=0.5, alpha=0.7)
 
-        plt.savefig("plant_prey.png", dpi=300, bbox_inches='tight')
+        plt.savefig("./graphs/plant_prey.png", dpi=300, bbox_inches='tight')
         # Display the plot
         plt.show()
 
@@ -77,10 +77,10 @@ class Plotter:
         plt.xlabel('Time', fontsize=12)
         plt.ylabel('Number', fontsize=12)
         plt.title('Prey vs Predator', fontsize=16, fontweight='bold')
-        plt.legend()
+        plt.legend(loc='best')
         plt.grid(color='gray', linestyle='--', linewidth=0.5, alpha=0.7)
 
-        plt.savefig("prey_predator.png", dpi=300, bbox_inches='tight')
+        plt.savefig("./graphs/prey_predator.png", dpi=300, bbox_inches='tight')
         # Display the plot
         plt.show()
 
@@ -98,10 +98,10 @@ class Plotter:
         plt.xlabel('Time', fontsize=12)
         plt.ylabel('Number', fontsize=12)
         plt.title('Prey vs Predator vs Ev Predator', fontsize=16, fontweight='bold')
-        plt.legend()
+        plt.legend(loc='best')
         plt.grid(color='gray', linestyle='--', linewidth=0.5, alpha=0.7)
 
-        plt.savefig("prey_predator_ev_predator.png", dpi=300, bbox_inches='tight')
+        plt.savefig("./graphs/prey_predator_ev_predator.png", dpi=300, bbox_inches='tight')
         # Display the plot
         plt.show()
 
