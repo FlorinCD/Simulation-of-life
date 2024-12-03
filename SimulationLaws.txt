@@ -31,10 +31,11 @@ The chances | the parameters do no reflect entirely the whole mechanism since th
 Parameters to try:
     preys: 6
     predators: 2
-    prey_ev_ch: 0.5
-    predator_ev_ch: 0.5
-    ev_pre_regress_ch: 0.01
-    cataclysm_ch: 0.001
+    prey_ev_ch: 0.35
+    predator_ev_ch: 0.8
+    ev_pre_regress_ch: 0.001 (predator_ev_regress_ch should be very low to control the population of normal predators)
+    cataclysm_ch: 0.0017 (chance of cataclysm should be small as for terrain structures to form because of ev prey and for population of predators to not go extinct)
+
 
 	
 	

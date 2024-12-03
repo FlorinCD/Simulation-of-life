@@ -721,6 +721,12 @@ def run_simulation():
     WIN = pygame.display.set_mode((WIDTH, WIDTH))
     pygame.display.set_caption("Evolution")
 
+    # Load the icon image
+    icon = pygame.image.load('./static/icons/dna.png')
+
+    # Set the icon
+    pygame.display.set_icon(icon)
+
     grid = make_grid(ROWS, WIDTH)
     run = True
 
@@ -804,7 +810,7 @@ def run_simulation():
 
     # plot the result data
     plotter_obj = Plotter(information_over_time)
-    plotter_obj.plot_graph()
+    plotter_obj.get_all_plots()
 
 
 
