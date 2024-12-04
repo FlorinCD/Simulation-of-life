@@ -2,7 +2,7 @@ import tkinter as tk
 import logging
 import simulation
 
-from tkinter import Text, messagebox
+from tkinter import Text, messagebox, Canvas
 
 
 
@@ -35,6 +35,9 @@ class Menu:
         self.evolved_predator_regression_value = None
         self.cataclysm_chance_value = None
 
+        self.bg_img_reference = None
+        self.canvas_main_menu = None
+
         self.decorate_menu()
 
         self.root.mainloop()
@@ -46,12 +49,22 @@ class Menu:
         self.root.iconbitmap(r"static/icons/simulation_of_life.ico")
         self.root.resizable(False, False)
 
-        self.frame = tk.Frame(self.root, bg="lightblue", padx=10, pady=10)
+        self.frame = tk.Frame(self.root, bg="lightblue", padx=0, pady=0)
         self.frame.pack(fill=tk.BOTH, expand=True)
 
         self.title_label = tk.Label(self.frame, text="Configuration of simulation:", anchor="w", bg='#3b3642', fg='#ffffff',
                                           font=("Arial", 11))
         self.title_label.place(x=200, y=5)
+
+        # Load the background image
+        self.bg_img_reference = tk.PhotoImage(file=r"static/images/image_1.png")
+
+        # Create Canvas
+        self.canvas_main_menu = Canvas(self.frame, width=600, height=600)
+        self.canvas_main_menu.pack()
+
+        # Display image
+        self.canvas_main_menu.create_image((0, 0), image=self.bg_img_reference, anchor="nw")
 
         self.prey_number_label = tk.Label(self.frame, text="The number of preys:", anchor="w", bg='#3b3642', fg='#ffffff',
                                           font=("Arial", 11))
