@@ -36,11 +36,17 @@
 
 ## **Installation**
     Steps to install the project:
+
     1. Open a command line shell such as Powershell (on Windows).
+
     2. Create a folder to store the project at <storage_folder_path>.
+
     3. Clone the repository at <storage_folder_path>/ : git clone https://github.com/FlorinCD/Simulation-of-life
+
     4. At <storage_folder_path>/Simulation-of-life/ create a virtual environment.
+
     5. Activate the venv : cd <storage_folder_path>/Simulation-of-life/<venv-name-given>/Scripts/activate (now it should have name of the venv in the front in cmd)
+
     6. Install dependencies: at <storage_folder_path>/Simulation-of-life/ use: pip install -r requirements.txt
 
 ## **Usage**
