@@ -52,5 +52,5 @@
     This project is not licensed but refer to it when using it somewhere else.
 
 ## **Contact**
-    Author: Despina Florin
+    Author: Florin Despina
     Email: florin_cosmin77@yahoo.com
