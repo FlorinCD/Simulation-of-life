@@ -175,6 +175,7 @@ def draw(win, grid, rows, width):  # draws the spots
     pygame.display.update()
 
 
+# try to spawn 10 plants if possible
 def plant_spawn(win, grid):  # spawn plants
     global ROWS, PLANT
     n = 10
@@ -186,18 +187,11 @@ def plant_spawn(win, grid):  # spawn plants
             spot.make_plant()
             spot.energy = 15  # a plant has 15 energy to offer
             PLANT.append((r, c))
-            for d in dir:
-                if 0 <= r + d[0] < ROWS and 0 <= c + d[1] < ROWS and grid[r + d[0]][c + d[1]].is_plant():
-                    for j in dir:
-                        if 0 <= r + j[0] < ROWS and 0 <= c + j[1] < ROWS and grid[r + j[0]][c + j[1]].is_ground():
-                            grid[r + j[0]][c + j[1]].make_plant()
-                            grid[r + j[0]][c + j[1]].energy = 15
-                            PLANT.append((r + j[0], c + j[1]))
-                            break
-                    break
+
         n -= 1
 
 
+# spawn the exact number of preys
 def prey_spawn(win, grid):  # spawn prey
     global PREY_NUMBER, PREY_ENERGY, ROWS, PREY
     n = PREY_NUMBER
@@ -212,7 +206,8 @@ def prey_spawn(win, grid):  # spawn prey
             n -= 1
 
 
-def prey_move(win, grid):  # the move made by the prey
+# the move made by the normal prey
+def prey_move(win, grid):
     global PREY, PREY_ENERGY, GREEN, BLACK, PURPLE, ROWS, RED, ORANGE, TURQUOISE
 
     def dfs(graph, node, prev):
@@ -392,18 +387,19 @@ def predator_move(win, grid):  # the move made by the predator
     global PREY, PREY_ENERGY, GREEN, BLACK, PURPLE, ROWS, RED, ORANGE, TURQUOISE, PREDATOR, PREDATOR_ENERGY, EVOLVED_PREDATOR
     to_remove = []
 
-    # chance for predator to evolve in a better species
-    if random.random() <= PREDATOR_CHANCE_EVOLVE:
-        chance_of_ev = True
-    else:
-        chance_of_ev = False
-
     def dfs(graph, node, prev):
         if node not in graph:
             return prev
         return dfs(graph, graph[node], node)
 
     for i, predator in enumerate(PREDATOR):
+
+        # chance for predator to evolve in a better species
+        if random.random() <= PREDATOR_CHANCE_EVOLVE:
+            chance_of_ev = True
+        else:
+            chance_of_ev = False
+
         evolved = False
         parent = {}
         start1, start2 = predator
