@@ -37,17 +37,19 @@
 ## **Installation**
     Steps to install the project:
 
-    1. Open a command line shell such as Powershell (on Windows).
+    1. Install python (version 3.12.1).
 
-    2. Create a folder to store the project at <storage_folder_path>.
+    2. Open a command line shell such as Powershell (on Windows).
 
-    3. Clone the repository at <storage_folder_path>/ : git clone https://github.com/FlorinCD/Simulation-of-life
+    3. Create a folder to store the project at <storage_folder_path>.
 
-    4. At <storage_folder_path>/Simulation-of-life/ create a virtual environment.
+    4. Clone the repository at <storage_folder_path>/ : git clone https://github.com/FlorinCD/Simulation-of-life
 
-    5. Activate the venv : cd <storage_folder_path>/Simulation-of-life/<venv-name-given>/Scripts/activate (now it should have name of the venv in the front in cmd)
+    5. At <storage_folder_path>/Simulation-of-life/ create a virtual environment.
 
-    6. Install dependencies: at <storage_folder_path>/Simulation-of-life/ use: pip install -r requirements.txt
+    6. Activate the venv : cd <storage_folder_path>/Simulation-of-life/<venv-name-given>/Scripts/activate (now it should have name of the venv in the front in cmd)
+
+    7. Install dependencies: at <storage_folder_path>/Simulation-of-life/ use: pip install -r requirements.txt
 
 ## **Usage**
     - Example command: `python main.py` (this will launch the interface where you can set the parameters and run the simulation)
